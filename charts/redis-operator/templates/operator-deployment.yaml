@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-operator
+  namespace: client-yazio-techtest-system
+  labels:
+    app: redis-operator
+spec:
+  replicas: {{ .Values.operator.replicaCount }}
+  selector:
+    matchLabels:
+      app: redis-operator
+  template:
+    metadata:
+      labels:
+        app: redis-operator
+    spec:
+      serviceAccountName: redis-operator
+      containers:
+        - name: manager
+          image: "{{ .Values.operator.image.repository }}:{{ .Values.operator.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          resources: {{- toYaml .Values.operator.resources | nindent 12 }}
+      nodeSelector: {{- toYaml .Values.operator.nodeSelector | nindent 8 }}
+      tolerations: {{- toYaml .Values.operator.tolerations | nindent 8 }}
+      affinity: {{- toYaml .Values.operator.affinity | nindent 8 }} 

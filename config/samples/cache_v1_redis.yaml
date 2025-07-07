@@ -1,0 +1,43 @@
+apiVersion: cache.com.yazio/v1
+kind: Redis
+metadata:
+  name: redis-sample
+  namespace: default
+spec:
+  size: 6
+  
+  maxMemory: "512mb"
+
+  image:
+    repository: "bitnami/redis"
+    tag: "latest"
+
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "512Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+
+  storage:
+    size: "1Gi"
+    storageClassName: "standard"
+
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: app.kubernetes.io/instance
+              operator: In
+              values:
+              - redis-sample
+          topologyKey: "kubernetes.io/hostname"
+  tolerations:
+  - key: "workload"
+    operator: "Equal"
+    value: "database"
+    effect: "NoSchedule"

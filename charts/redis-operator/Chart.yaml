@@ -1,0 +1,5 @@
+apiVersion: v2
+name: redis-operator
+version: 0.1.0
+description: Despliega el Redis Operator, CRD, instancia de Redis y monitoreo (ServiceMonitor)
+type: application 

@@ -1,0 +1,29 @@
+# This rule is not used by the project client-yazio-techtest itself.
+# It is provided to allow the cluster admin to help manage permissions for users.
+#
+# Grants read-only access to cache.com.yazio resources.
+# This role is intended for users who need visibility into these resources
+# without permissions to modify them. It is ideal for monitoring purposes and limited-access viewing.
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: client-yazio-techtest
+    app.kubernetes.io/managed-by: kustomize
+  name: redis-viewer-role
+rules:
+- apiGroups:
+  - cache.com.yazio
+  resources:
+  - redis
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - cache.com.yazio
+  resources:
+  - redis/status
+  verbs:
+  - get

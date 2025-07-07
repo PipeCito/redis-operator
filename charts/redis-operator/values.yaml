@@ -1,0 +1,57 @@
+operator:
+  image:
+    repository: "sjbs0212/redis-operator"
+    tag: "v1.1.0"
+  replicaCount: 1
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+crd:
+  enabled: true
+
+redis:
+  # If you want to install base redis instances, set to true
+  enabled: false
+  name: redis-sample
+  namespace: default
+  size: 6
+  maxMemory: "512mb"
+  image:
+    repository: "bitnami/redis"
+    tag: "latest"
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "512Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+  storage:
+    size: "1Gi"
+    storageClassName: "standard"
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: app.kubernetes.io/instance
+              operator: In
+              values:
+              - redis-sample
+          topologyKey: "kubernetes.io/hostname"
+  tolerations:
+  - key: "workload"
+    operator: "Equal"
+    value: "database"
+    effect: "NoSchedule"
+
+monitoring:
+  enabled: true
+  servicemonitor:
+    labels: {}
+    interval: 30s
+    scrapeTimeout: 10s 

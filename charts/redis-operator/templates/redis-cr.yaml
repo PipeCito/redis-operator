@@ -1,0 +1,25 @@
+{{- if .Values.redis.enabled }}
+apiVersion: cache.com.yazio/v1
+kind: Redis
+metadata:
+  name: {{ .Values.redis.name }}
+  namespace: {{ .Values.redis.namespace }}
+spec:
+  size: {{ .Values.redis.size }}
+  maxMemory: "{{ .Values.redis.maxMemory }}"
+  image:
+    repository: "{{ .Values.redis.image.repository }}"
+    tag: "{{ .Values.redis.image.tag }}"
+  resources:
+    requests:
+      cpu: "{{ .Values.redis.resources.requests.cpu }}"
+      memory: "{{ .Values.redis.resources.requests.memory }}"
+    limits:
+      cpu: "{{ .Values.redis.resources.limits.cpu }}"
+      memory: "{{ .Values.redis.resources.limits.memory }}"
+  storage:
+    size: "{{ .Values.redis.storage.size }}"
+    storageClassName: "{{ .Values.redis.storage.storageClassName }}"
+  affinity: {{- toYaml .Values.redis.affinity | nindent 4 }}
+  tolerations: {{- toYaml .Values.redis.tolerations | nindent 4 }}
+{{- end }} 
